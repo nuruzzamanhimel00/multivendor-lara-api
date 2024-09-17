@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\login;
+use App\Models\UserPeople;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Query\JoinClause;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +18,30 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+Route::get('/last-three-recoreds', function () {
+    // //general code (Not working find)
+    // return $userPeople = UserPeople::query()
+    // // ->with(['login'=> function($query){
+    // //     return $query->latest()->take(2);
+    // // }])
+    // ->with(['login'])
+    // ->get();
+
+
+
+    // //*************joinLateral code
+    $latestLogin = login::query()->whereColumn('user_people_id', 'user_people.id')
+    ->latest('logins.login_at')
+    ->take(2);
+
+    return $userPeople = UserPeople::query()
+    ->select(['user_people.name','user_people.id','latest_login.login_at','latest_login.user_people_id'])
+    ->joinLateral($latestLogin, 'latest_login')
+    ->get();
+
+
+
+
+
 });
