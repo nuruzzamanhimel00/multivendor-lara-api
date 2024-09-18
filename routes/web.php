@@ -30,7 +30,7 @@ Route::get('/last-three-recoreds', function () {
 
 
 
-    // //*************joinLateral code
+    // // //*************joinLateral code
     $latestLogin = login::query()->whereColumn('user_people_id', 'user_people.id')
     ->latest('logins.login_at')
     ->take(2);
@@ -40,7 +40,17 @@ Route::get('/last-three-recoreds', function () {
     ->joinLateral($latestLogin, 'latest_login')
     ->get();
 
-
+    // //same query in different way
+    // return UserPeople::query()
+    // ->with(['login'=>function($query){
+    //     return $query->whereIn('id', function($subQuery){
+    //         return $subQuery->select('id')->from('logins as ld')
+    //         ->whereColumn('ld.user_people_id', 'logins.user_people_id')
+    //         ->orderBy('ld.login_at', 'desc')
+    //             ->take(2);
+    //     });
+    // }])
+    // ->get();
 
 
 
