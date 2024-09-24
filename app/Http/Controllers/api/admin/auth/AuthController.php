@@ -9,6 +9,46 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    public function register(Request $request){
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'min:8|required_with:confirmed_password|same:confirmed_password',
+            'confirmed_password' => 'min:8'
+        ]);
+
+        try {
+            $requestData = $request->all();
+            $requestData['user_type'] = User::USER_TYPE_SELLER;
+            $requestData['password'] = Hash::make($requestData['password']);
+            $user = User::create($requestData);
+            $token = $user->createToken('MyApp')->plainTextToken;
+
+            return response()->json([
+                'status' => true,
+                "token" => $token,
+                "user" => $user,
+                "message" => 'Register successfully',
+            ]);
+
+        } catch (\Exception $e) {
+
+            if (config('app.debug')) {
+                // Return detailed error information in development
+                return response()->json([
+                    'status' => false,
+                    'message' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(), // Optional: Include stack trace for debugging
+                ], 500); // Internal Server Error status code
+            } else {
+                // Return a generic error message in production
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Something went wrong. Please try again later.',
+                ], 500);
+            }
+        }
+    }
     public function login(Request $request)
     {
 
