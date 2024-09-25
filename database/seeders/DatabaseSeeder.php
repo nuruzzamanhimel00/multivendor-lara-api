@@ -26,10 +26,18 @@ class DatabaseSeeder extends Seeder
             User::query()->updateOrCreate(
                 ['email' => 'admin@app.com'],
                 [
-                    'name' => 'Test User',
+                    'name' => 'Test Admin',
                     'email' => 'admin@app.com',
                     'password' => Hash::make('12345678'),
                     'user_type' => User::USER_TYPE_ADMIN
+                ]);
+            User::query()->updateOrCreate(
+                ['email' => 'user@app.com'],
+                [
+                    'name' => 'Test User',
+                    'email' => 'user@app.com',
+                    'password' => Hash::make('12345678'),
+                    'user_type' => User::USER_TYPE_USER
                 ]);
 
                 $this->call([

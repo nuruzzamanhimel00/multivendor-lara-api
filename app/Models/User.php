@@ -14,6 +14,9 @@ class User extends Authenticatable
 
     const USER_TYPE_ADMIN = 'admin';
     const USER_TYPE_SELLER = 'seller';
+    const USER_TYPE_USER = 'user';
+
+    const ADMIN_USER_TYPES = [self::USER_TYPE_ADMIN,self::USER_TYPE_SELLER];
 
     /**
      * The attributes that are mass assignable.

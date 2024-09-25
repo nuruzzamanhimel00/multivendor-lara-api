@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\api\admin\auth;
+namespace App\Http\Controllers\api\auth;
 
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
-class AuthController extends Controller
+class UserAuthController extends Controller
 {
     public function register(Request $request){
         $request->validate([
@@ -60,7 +60,7 @@ class AuthController extends Controller
         try {
             $user = User::where('email', $request->email)->first();
 
-            if (!$user || !Hash::check($request->password, $user->password) || !in_array($user->user_type, User::ADMIN_USER_TYPES) ) {
+            if (!$user || !Hash::check($request->password, $user->password) || $user->user_type != User::USER_TYPE_USER ) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Invalid Credentials'
@@ -98,13 +98,5 @@ class AuthController extends Controller
 
     }
 
-    public function logout(Request $request)
-    {
-        $request->user()->tokens()->delete();
 
-        return response()->json([
-            'message' => 'Successfully logged out'
-        ]);
-
-    }
 }

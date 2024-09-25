@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\api\auth\UserAuthController;
 use App\Http\Controllers\api\admin\auth\AuthController;
 
 /*
@@ -18,9 +19,12 @@ use App\Http\Controllers\api\admin\auth\AuthController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+//user auth
+Route::post('/login',[UserAuthController::class,'login']);
 
-Route::post('/login',[AuthController::class,'login']);
-Route::post('/register',[AuthController::class,'register']);
+//admin auth
+Route::post('/admin/login',[AuthController::class,'login']);
+Route::post('/admin/register',[AuthController::class,'register']);
 Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('logout', [AuthController::class, 'logout']);
 
