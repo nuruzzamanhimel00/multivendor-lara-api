@@ -16,10 +16,10 @@ return new class extends Migration
             // Define foreign key constraint with cascade delete
             $table->unsignedBigInteger('user_id')->nullable(); // Make the column nullable
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('subdomain')->nullable();
-            $table->string('shop_name');
+            $table->string('subdomain')->nullable()->unique();
+            $table->string('shop_name')->unique();
             $table->text('shop_description')->nullable();
-            $table->string('shop_phone')->nullable();
+            $table->string('shop_phone')->nullable()->unique();
             $table->string('shop_address')->nullable();
             $table->string('shop_logo')->nullable();
             $table->string('shop_image')->nullable();
@@ -30,6 +30,12 @@ return new class extends Migration
             $table->boolean('display_product')->default(1)->comment('1=Yes, 2=No');
             $table->integer('views')->default(0);
             $table->text('payment_info')->nullable();
+            // Define foreign key constraint with cascade delete
+            $table->unsignedBigInteger('plan_id')->nullable(); // Make the column nullable
+            $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
+
+            $table->unsignedBigInteger('user_plan_id')->nullable(); // Make the column nullable
+            $table->foreign('user_plan_id')->references('id')->on('plans')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

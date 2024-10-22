@@ -27,6 +27,9 @@ class Company extends Model
         'views',
         'payment_info',
     ];
+    public const FILE_LOGO_PATH = 'company/logo';
+    public const FILE_IMAGE_PATH = 'company/image';
+    public const FILE_COVER_IMAGE_PATH = 'company/cover_image';
 
     public function users()
     {

@@ -2,37 +2,104 @@
 
 namespace App\Http\Controllers\api\admin\auth;
 
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\UserPlan;
 use Illuminate\Http\Request;
+use App\Services\User\UserService;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use App\Services\Plan\UserPlanService;
+use App\Services\Company\CompanyService;
+use App\Services\Category\CategoryService;
 
 class AuthController extends Controller
 {
+    public $userService;
+    public $companyService;
+    public $categoryService;
+    public $userPlanService;
+    public function __construct(UserService $userService, CompanyService $companyService, CategoryService $categoryService,
+    UserPlanService $userPlanService){
+        $this->userService = $userService;
+        $this->companyService = $companyService;
+        $this->categoryService = $categoryService;
+        $this->userPlanService = $userPlanService;
+    }
     public function register(Request $request){
         $request->validate([
-            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'name' => 'required|string|max:255',
+            'shop_name' => 'required|string|max:255|unique:companies,shop_name',
             'password' => 'min:8|required_with:confirmed_password|same:confirmed_password',
             'confirmed_password' => 'min:8'
         ]);
 
-        try {
-            $requestData = $request->all();
-            $requestData['user_type'] = User::USER_TYPE_SELLER;
-            $requestData['password'] = Hash::make($requestData['password']);
-            $user = User::create($requestData);
-            $token = $user->createToken('MyApp')->plainTextToken;
 
+        try {
+            DB::beginTransaction();
+
+            //user create
+            $userData = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => $request->password,
+                'user_type' => User::USER_TYPE_SELLER,
+                'phone' => $request->phone
+            ];
+            $owner = $this->userService->createOrUpdate($userData);
+            $token = $owner->createToken('MyApp')->plainTextToken;
+
+            //owner company create
+            $CompanyData = [
+                'user_id' => $owner->id,
+                'subdomain' => makeAlias($request->shop_name),
+                'shop_name' => $request->shop_name,
+                'shop_description' => '',
+                'shop_phone' => $owner->phone,
+                'shop_address' => null,
+                'shop_logo' => null,
+                'shop_image' => null,
+                'cover_image' => null,
+                'lat' => '',
+                'lng'=> '',
+                'is_featured'=>2,
+                'display_product'=>1,
+                'views'=>0,
+                'payment_info'=>'',
+            ];
+            $company = $this->companyService->createOrUpdate($CompanyData);
+            // $user = User::create($requestData);
+
+            $CategoryData = [
+                'company_id' => $company->id,
+                'category_name' => 'Default',
+                'order_index' => 0,
+                'status' => 'active',
+            ];
+            $category = $this->categoryService->createOrUpdate($CategoryData);
+            $UserPlanData = [
+                'user_id' => $owner->id,
+                'plan_id' => 1,
+                'company_id' => $company->id,
+                'document' => '',
+                'status' => UserPlan::ACCEPTED,
+                'status_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addDays(30),
+                'price' => 0
+            ];
+            $this->userPlanService->createOrUpdate($UserPlanData);
+            DB::commit();
             return response()->json([
                 'status' => true,
                 "token" => $token,
-                "user" => $user,
+                "user" => $owner,
                 "message" => 'Register successfully',
             ]);
 
         } catch (\Exception $e) {
-
+            DB::rollBack();
             if (config('app.debug')) {
                 // Return detailed error information in development
                 return response()->json([

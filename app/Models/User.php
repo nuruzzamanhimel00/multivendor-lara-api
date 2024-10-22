@@ -25,6 +25,8 @@ class User extends Authenticatable
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
 
+
+
     /**
      * The attributes that are mass assignable.
      *
@@ -39,8 +41,7 @@ class User extends Authenticatable
         'last_login_date',
         'phone',
         'status',
-        'plan_id',
-        'user_plan_id',
+
     ];
 
     /**

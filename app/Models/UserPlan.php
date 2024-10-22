@@ -21,7 +21,9 @@ class UserPlan extends Model
         'end_date',
         'price',
         'created_by',
-        'updated_by'
+        'updated_by',
+        'plan_id',
+        'user_plan_id'
     ];
 
     public static function booted()

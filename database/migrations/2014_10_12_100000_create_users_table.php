@@ -21,15 +21,8 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('user_type')->default(User::USER_TYPE_SELLER);
             $table->datetime('last_login_date')->nullable();
-            $table->string('phone')->nullable();
+            $table->string('phone')->nullable()->unique();
             $table->string('status')->default(User::STATUS_ACTIVE);
-            // Define foreign key constraint with cascade delete
-            $table->unsignedBigInteger('plan_id')->nullable(); // Make the column nullable
-            $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
-
-            $table->unsignedBigInteger('user_plan_id')->nullable(); // Make the column nullable
-            $table->foreign('user_plan_id')->references('id')->on('plans')->onDelete('cascade');
-
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
