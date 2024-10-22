@@ -3,20 +3,27 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
 
     const USER_TYPE_ADMIN = 'admin';
-    const USER_TYPE_SELLER = 'seller';
+    const USER_TYPE_SELLER = 'owner';
     const USER_TYPE_USER = 'user';
 
     const ADMIN_USER_TYPES = [self::USER_TYPE_ADMIN,self::USER_TYPE_SELLER];
+
+    const FILE_STORE_PATH ='users';
+
+    const STATUS_ACTIVE = 'active';
+    const STATUS_INACTIVE = 'inactive';
 
     /**
      * The attributes that are mass assignable.
@@ -27,6 +34,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
+        'user_type',
+        'last_login_date',
+        'phone',
+        'status',
+        'plan_id',
+        'user_plan_id',
     ];
 
     /**
@@ -47,4 +61,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $appends = ['avatar_url'];
+
+    public function getAvatarUrlAttribute()
+    {
+        return getStorageImage(self::FILE_STORE_PATH, $this->avatar, true);
+    }
 }
