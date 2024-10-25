@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Notifications\Mail\RegisterCreateAdminNotify;
 
-class RegisterCreateJobNotify implements ShouldQueue
+class AdminNotifyRegisCreateJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

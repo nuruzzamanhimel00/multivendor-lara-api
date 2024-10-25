@@ -10,8 +10,9 @@ use App\Services\User\UserService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use App\Jobs\RegisterCreateJobNotify;
 use App\Services\Plan\UserPlanService;
+use App\Jobs\AdminNotifyRegisCreateJob;
+use App\Jobs\OwnerNotifyRegisCreateJob;
 use App\Services\Company\CompanyService;
 use App\Services\Category\CategoryService;
 use App\Notifications\Mail\RegisterCreateAdminNotify;
@@ -34,6 +35,8 @@ class AuthController extends Controller
         // $owner = User::find(2);
         // $owner->notify(new RegisterCreateAdminNotify($admin, $owner));
         // return $admin;
+        // return request()->password;
+
         $request->validate([
             'email' => 'required|email|unique:users,email',
             'name' => 'required|string|max:255',
@@ -41,8 +44,7 @@ class AuthController extends Controller
             'password' => 'min:8|required_with:confirmed_password|same:confirmed_password',
             'confirmed_password' => 'min:8'
         ]);
-
-
+        $password = $request->password;
         try {
             DB::beginTransaction();
 
@@ -105,8 +107,11 @@ class AuthController extends Controller
             // return ($CompanyData);
             $company = $this->companyService->createOrUpdate($CompanyData, $company->id);
             DB::commit();
-            //job work  for mail send to user after new registration create
-            RegisterCreateJobNotify::dispatch($owner);
+            // //job work  for mail send to user after new registration create
+            AdminNotifyRegisCreateJob::dispatch($owner);
+            //owner notify
+            OwnerNotifyRegisCreateJob::dispatch($owner,$password);
+
 
             return response()->json([
                 'status' => true,
