@@ -19,6 +19,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        User::query()->updateOrCreate(
+            ['email' => 'admin@app.com'],
+            [
+                'name' => 'Test Admin',
+                'email' => 'admin@app.com',
+                'password' => Hash::make('12345678'),
+                'user_type' => User::USER_TYPE_ADMIN
+            ]);
         $owner = User::query()->updateOrCreate(
             ['email' => 'owner@app.com'],
             [
@@ -28,14 +36,7 @@ class DatabaseSeeder extends Seeder
                 'user_type' => User::USER_TYPE_SELLER
             ]);
 
-            User::query()->updateOrCreate(
-                ['email' => 'admin@app.com'],
-                [
-                    'name' => 'Test Admin',
-                    'email' => 'admin@app.com',
-                    'password' => Hash::make('12345678'),
-                    'user_type' => User::USER_TYPE_ADMIN
-                ]);
+
             User::query()->updateOrCreate(
                 ['email' => 'user@app.com'],
                 [
@@ -87,7 +88,7 @@ class DatabaseSeeder extends Seeder
                  // Create user plan
                 $data = [
                     'user_id' => $owner->id,
-                    'plan_id' => 1,
+                    'plan_id' => 2,
                     'company_id' => $company->id,
                     'document' => '',
                     'status' => UserPlan::ACCEPTED,
@@ -95,6 +96,14 @@ class DatabaseSeeder extends Seeder
                     'end_date' => Carbon::now()->addDays(30),
                     'price' => 0
                 ];
-                UserPlan::updateOrCreate($data);
+                $user_plan = UserPlan::updateOrCreate($data);
+                //company update
+                $CompanyData = [
+                    'plan_id' => 1,
+                    'user_plan_id' => $user_plan->id
+                ];
+                $company = Company::updateOrCreate(
+                    ['user_id' => $owner->id],
+                    $CompanyData);
     }
 }
