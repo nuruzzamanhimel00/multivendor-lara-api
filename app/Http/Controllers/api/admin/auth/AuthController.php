@@ -10,9 +10,11 @@ use App\Services\User\UserService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use App\Jobs\RegisterCreateJobNotify;
 use App\Services\Plan\UserPlanService;
 use App\Services\Company\CompanyService;
 use App\Services\Category\CategoryService;
+use App\Notifications\Mail\RegisterCreateAdminNotify;
 
 class AuthController extends Controller
 {
@@ -28,6 +30,10 @@ class AuthController extends Controller
         $this->userPlanService = $userPlanService;
     }
     public function register(Request $request){
+        // $admin = User::find(1);
+        // $owner = User::find(2);
+        // $owner->notify(new RegisterCreateAdminNotify($admin, $owner));
+        // return $admin;
         $request->validate([
             'email' => 'required|email|unique:users,email',
             'name' => 'required|string|max:255',
@@ -37,8 +43,8 @@ class AuthController extends Controller
         ]);
 
 
-        // try {
-        //     DB::beginTransaction();
+        try {
+            DB::beginTransaction();
 
             //user create
             $userData = [
@@ -70,7 +76,7 @@ class AuthController extends Controller
                 'payment_info'=>'',
             ];
             $company = $this->companyService->createOrUpdate($CompanyData);
-            // DB::commit();
+            DB::commit();
             $CategoryData = [
                 'company_id' => $company->id,
                 'category_name' => 'Default',
@@ -78,7 +84,7 @@ class AuthController extends Controller
                 'status' => 'active',
             ];
             $category = $this->categoryService->createOrUpdate($CategoryData);
-            // DB::commit();
+            DB::commit();
             $UserPlanData = [
                 'user_id' => $owner->id,
                 'plan_id' => 1,
@@ -90,7 +96,7 @@ class AuthController extends Controller
                 'price' => 0
             ];
             $user_Plan = $this->userPlanService->createOrUpdate($UserPlanData);
-            // DB::commit();
+            DB::commit();
             //company update
             $CompanyData = [
                 'plan_id' => 1,
@@ -98,7 +104,10 @@ class AuthController extends Controller
             ];
             // return ($CompanyData);
             $company = $this->companyService->createOrUpdate($CompanyData, $company->id);
-            // DB::commit();
+            DB::commit();
+            //job work  for mail send to user after new registration create
+            RegisterCreateJobNotify::dispatch($owner);
+
             return response()->json([
                 'status' => true,
                 "token" => $token,
@@ -106,23 +115,23 @@ class AuthController extends Controller
                 "message" => 'Register successfully',
             ]);
 
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-        //     if (config('app.debug')) {
-        //         // Return detailed error information in development
-        //         return response()->json([
-        //             'status' => false,
-        //             'message' => $e->getMessage(),
-        //             'trace' => $e->getTraceAsString(), // Optional: Include stack trace for debugging
-        //         ], 500); // Internal Server Error status code
-        //     } else {
-        //         // Return a generic error message in production
-        //         return response()->json([
-        //             'status' => false,
-        //             'message' => 'Something went wrong. Please try again later.',
-        //         ], 500);
-        //     }
-        // }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            if (config('app.debug')) {
+                // Return detailed error information in development
+                return response()->json([
+                    'status' => false,
+                    'message' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(), // Optional: Include stack trace for debugging
+                ], 500); // Internal Server Error status code
+            } else {
+                // Return a generic error message in production
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Something went wrong. Please try again later.',
+                ], 500);
+            }
+        }
     }
     public function login(Request $request)
     {
