@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Builder;
 
 
 class User extends Authenticatable
@@ -62,10 +63,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['avatar_url'];
+    protected $appends = ['avatar_url','last_login_dt'];
 
     public function getAvatarUrlAttribute()
     {
         return getStorageImage(self::FILE_STORE_PATH, $this->avatar, true);
     }
+    public function scopeIsOwner(Builder $builder)
+    {
+        return $builder->where('user_type', User::USER_TYPE_SELLER);
+    }
+    public function getLastLoginDtAttribute(){
+
+        return !is_null($this->last_login_date) ? $this->last_login_date->diffForHumans(): "N/A";
+    }
+
 }

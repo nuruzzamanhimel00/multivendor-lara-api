@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 
 class Company extends Model
 {
@@ -29,12 +30,34 @@ class Company extends Model
         'plan_id',
         'user_plan_id'
     ];
+    protected $appends = ['company_logo_url','company_image_url','company_cover_image_url','created_date'];
     public const FILE_LOGO_PATH = 'company/logo';
     public const FILE_IMAGE_PATH = 'company/image';
     public const FILE_COVER_IMAGE_PATH = 'company/cover_image';
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class,'user_id','id');
     }
+
+
+    public function getCompanyLogoUrlAttribute()
+    {
+        return getStorageImage(self::FILE_LOGO_PATH, $this->shop_logo, false);
+    }
+    public function getCompanyImageUrlAttribute()
+    {
+        return getStorageImage(self::FILE_IMAGE_PATH, $this->shop_image, false);
+    }
+    public function getCompanyCoverImageUrlAttribute()
+    {
+        return getStorageImage(self::FILE_COVER_IMAGE_PATH, $this->cover_image, false);
+    }
+
+    public function getCreatedDateAttribute(){
+
+        return !is_null($this->created_at) ? $this->created_at->diffForHumans(): "N/A";
+    }
+
+
 }

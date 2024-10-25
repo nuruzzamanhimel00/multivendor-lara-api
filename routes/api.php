@@ -2,8 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\user\auth\UserAuthController;
+use App\Http\Controllers\api\CompanyController;
 use App\Http\Controllers\api\admin\auth\AuthController;
+use App\Http\Controllers\api\user\auth\UserAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,5 +28,5 @@ Route::post('/admin/login',[AuthController::class,'login']);
 Route::post('/admin/register',[AuthController::class,'register']);
 Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('logout', [AuthController::class, 'logout']);
-
+    Route::apiResource('companies', CompanyController::class);
   });
