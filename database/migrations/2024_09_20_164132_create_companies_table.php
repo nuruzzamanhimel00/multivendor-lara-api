@@ -30,12 +30,13 @@ return new class extends Migration
             $table->boolean('display_product')->default(1)->comment('1=Yes, 2=No');
             $table->integer('views')->default(0);
             $table->text('payment_info')->nullable();
+
             // Define foreign key constraint with cascade delete
             $table->unsignedBigInteger('plan_id')->nullable(); // Make the column nullable
             $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
 
             $table->unsignedBigInteger('user_plan_id')->nullable(); // Make the column nullable
-            $table->foreign('user_plan_id')->references('id')->on('plans')->onDelete('cascade');
+            $table->foreign('user_plan_id')->references('id')->on('user_plans')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -18,8 +18,10 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('plan_id')->nullable(); // Make the column nullable
             $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
-            $table->unsignedBigInteger('company_id')->nullable(); // Make the column nullable
-            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
+
+            $table->foreignId('company_id');
+
+
             $table->string('document')->nullable();
             $table->string('status')->default('pending')->comment('pending,accepted,declined');
             $table->date('status_date')->nullable();

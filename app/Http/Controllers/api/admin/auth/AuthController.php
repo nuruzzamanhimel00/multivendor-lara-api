@@ -37,8 +37,8 @@ class AuthController extends Controller
         ]);
 
 
-        try {
-            DB::beginTransaction();
+        // try {
+        //     DB::beginTransaction();
 
             //user create
             $userData = [
@@ -70,8 +70,7 @@ class AuthController extends Controller
                 'payment_info'=>'',
             ];
             $company = $this->companyService->createOrUpdate($CompanyData);
-            // $user = User::create($requestData);
-
+            // DB::commit();
             $CategoryData = [
                 'company_id' => $company->id,
                 'category_name' => 'Default',
@@ -79,6 +78,7 @@ class AuthController extends Controller
                 'status' => 'active',
             ];
             $category = $this->categoryService->createOrUpdate($CategoryData);
+            // DB::commit();
             $UserPlanData = [
                 'user_id' => $owner->id,
                 'plan_id' => 1,
@@ -89,8 +89,16 @@ class AuthController extends Controller
                 'end_date' => Carbon::now()->addDays(30),
                 'price' => 0
             ];
-            $this->userPlanService->createOrUpdate($UserPlanData);
-            DB::commit();
+            $user_Plan = $this->userPlanService->createOrUpdate($UserPlanData);
+            // DB::commit();
+            //company update
+            $CompanyData = [
+                'plan_id' => 1,
+                'user_plan_id' => $user_Plan->id
+            ];
+            // return ($CompanyData);
+            $company = $this->companyService->createOrUpdate($CompanyData, $company->id);
+            // DB::commit();
             return response()->json([
                 'status' => true,
                 "token" => $token,
@@ -98,23 +106,23 @@ class AuthController extends Controller
                 "message" => 'Register successfully',
             ]);
 
-        } catch (\Exception $e) {
-            DB::rollBack();
-            if (config('app.debug')) {
-                // Return detailed error information in development
-                return response()->json([
-                    'status' => false,
-                    'message' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString(), // Optional: Include stack trace for debugging
-                ], 500); // Internal Server Error status code
-            } else {
-                // Return a generic error message in production
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Something went wrong. Please try again later.',
-                ], 500);
-            }
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+        //     if (config('app.debug')) {
+        //         // Return detailed error information in development
+        //         return response()->json([
+        //             'status' => false,
+        //             'message' => $e->getMessage(),
+        //             'trace' => $e->getTraceAsString(), // Optional: Include stack trace for debugging
+        //         ], 500); // Internal Server Error status code
+        //     } else {
+        //         // Return a generic error message in production
+        //         return response()->json([
+        //             'status' => false,
+        //             'message' => 'Something went wrong. Please try again later.',
+        //         ], 500);
+        //     }
+        // }
     }
     public function login(Request $request)
     {

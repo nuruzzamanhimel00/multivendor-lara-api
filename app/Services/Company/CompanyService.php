@@ -26,23 +26,23 @@ class CompanyService extends BaseService
     {
         if ($id) {
             // Update
-            $customer = $this->get($id);
+            $company = $this->get($id);
 
-            // Password
-            if (isset($data['password']) && $data['password']) {
-                $data['password'] = Hash::make($data['password']);
+            if (isset($data['shop_logo']) && $data['shop_logo'] != null) {
+                $data['shop_logo'] = $this->fileUploadService->uploadFile($data['shop_logo'],Company::FILE_LOGO_PATH,
+                Company::FILE_LOGO_PATH."/".$company->shop_logo
+                );
+            }
+            if (isset($data['shop_image']) && $data['shop_image'] != null) {
+                $data['shop_image'] = $this->fileUploadService->uploadFile($data['shop_image'],Company::FILE_IMAGE_PATH,
+                Company::FILE_IMAGE_PATH."/".$company->shop_image
+            );
+            }
+            if (isset($data['cover_image']) && $data['cover_image'] != null) {
+                $data['cover_image'] = $this->fileUploadService->uploadFile($data['cover_image'],Company::FILE_COVER_IMAGE_PATH, Company::FILE_COVER_IMAGE_PATH."/".$company->cover_image);
             }
 
-            // // Avatar
-            if (isset($data['avatar']) && $data['avatar'] != null) {
-                $data['avatar'] = $this->uploadFile($data['avatar'], $customer->avatar);
-            }
-
-            if (isset($data['back_avatar']) && $data['back_avatar'] != null) {
-                $data['back_avatar'] = $this->uploadFile($data['back_avatar'], $customer->back_avatar);
-            }
-            // dd('inside $data', $data);
-            return $customer = $this->model::updateOrCreate(
+            return $company = $this->model::updateOrCreate(
                 [
                     'id' => $id
                 ],

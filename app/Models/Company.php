@@ -26,6 +26,8 @@ class Company extends Model
         'display_product',
         'views',
         'payment_info',
+        'plan_id',
+        'user_plan_id'
     ];
     public const FILE_LOGO_PATH = 'company/logo';
     public const FILE_IMAGE_PATH = 'company/image';
