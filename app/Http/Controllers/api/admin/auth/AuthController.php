@@ -31,20 +31,17 @@ class AuthController extends Controller
         $this->userPlanService = $userPlanService;
     }
     public function register(Request $request){
-        // $admin = User::find(1);
-        // $owner = User::find(2);
-        // $owner->notify(new RegisterCreateAdminNotify($admin, $owner));
-        // return $admin;
-        // return request()->password;
+
 
         $request->validate([
             'email' => 'required|email|unique:users,email',
             'name' => 'required|string|max:255',
             'shop_name' => 'required|string|max:255|unique:companies,shop_name',
-            'password' => 'min:8|required_with:confirmed_password|same:confirmed_password',
-            'confirmed_password' => 'min:8'
+            // 'password' => 'min:8|required_with:confirmed_password|same:confirmed_password',
+            // 'confirmed_password' => 'min:8'
         ]);
-        $password = $request->password;
+        $password = rand(111111, 999999);
+
         try {
             DB::beginTransaction();
 
@@ -52,7 +49,7 @@ class AuthController extends Controller
             $userData = [
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => $request->password,
+                'password' => $password,
                 'user_type' => User::USER_TYPE_SELLER,
                 'phone' => $request->phone
             ];
