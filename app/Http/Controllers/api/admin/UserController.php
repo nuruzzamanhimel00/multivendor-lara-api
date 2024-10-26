@@ -61,7 +61,10 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::with(['company'])->find($id);
+        $user->company->delete();
+        $user->delete();
+        return response()->json(true);
     }
     public function statusUpdate(Request $request){
 

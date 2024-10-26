@@ -81,5 +81,10 @@ class User extends Authenticatable
 
         return !is_null($this->last_login_date) ? $this->last_login_date->diffForHumans(): "N/A";
     }
+    //relations
+    public function company(){
+
+        return $this->hasOne(Company::class,'user_id','id');
+    }
 
 }

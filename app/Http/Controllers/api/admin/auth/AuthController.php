@@ -144,7 +144,9 @@ class AuthController extends Controller
             'password' => 'required|min:4'
         ]);
         try {
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)
+            ->isActive()
+            ->first();
 
             if (!$user || !Hash::check($request->password, $user->password) || !in_array($user->user_type, User::ADMIN_USER_TYPES) ) {
                 return response()->json([
