@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
 
 class CompanyController extends Controller
 {
@@ -29,7 +30,7 @@ class CompanyController extends Controller
             $query->latest('companies.id');
         })
 
-        ->select('companies.*','users.*','user_plans.*','user_plans.status as user_plan_status','users.status as user_status','users.id as user_id')
+        ->select('companies.*','users.*','user_plans.*','user_plans.status as user_plan_status','users.status as user_status','users.id as user_id','companies.id as company_id')
         ->paginate($request->rows);
 
         // $all_data = Company::join('users', 'companies.user_id', '=', 'users.id')
@@ -93,6 +94,36 @@ class CompanyController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $company = Company::with(['user'])->find($id);
+        $company->user->delete();
+        $company->delete();
+        if(request()->ajax()){
+
+            return response()->json(true);
+        }
+    }
+
+    public function selectedCompanyDelete(Request $request){
+        $validatedData = $request->validate([
+            'company_ids' => [
+                'required',
+                'array',
+                function($attribute, $value, $fail) {
+                    if (!is_array($value)) {
+                        return $fail('The '.$attribute.' must be an array.');
+                    }
+                }
+            ],
+            'company_ids.*' => [
+                'required',
+                'integer',
+                Rule::exists('companies', 'id')
+            ],
+        ]);
+
+        foreach($request->company_ids as $company_id){
+            $this->destroy($company_id);
+        }
+        return response()->json(true);
     }
 }

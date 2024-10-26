@@ -30,6 +30,7 @@ Route::post('/admin/register',[AuthController::class,'register']);
 Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::apiResource('companies', CompanyController::class);
+    Route::post('selected-company-delete', [CompanyController::class,'selectedCompanyDelete']);
     Route::apiResource('users', UserController::class);
     Route::post('user-status-update', [UserController::class,'statusUpdate']);
   });
