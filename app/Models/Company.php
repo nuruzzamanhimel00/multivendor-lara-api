@@ -59,5 +59,14 @@ class Company extends Model
         return !is_null($this->created_at) ? $this->created_at->diffForHumans(): "N/A";
     }
 
+    //relationships
+    public function currentPlan(){
+
+        return $this->belongsTo(Plan::class,'plan_id','id');
+    }
+    public function currentUserPlan(){
+
+        return $this->belongsTo(Plan::class,'user_plan_id','id');
+    }
 
 }

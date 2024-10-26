@@ -99,7 +99,7 @@ class DatabaseSeeder extends Seeder
                 $user_plan = UserPlan::updateOrCreate($data);
                 //company update
                 $CompanyData = [
-                    'plan_id' => 1,
+                    'plan_id' => 2,
                     'user_plan_id' => $user_plan->id
                 ];
                 $company = Company::updateOrCreate(

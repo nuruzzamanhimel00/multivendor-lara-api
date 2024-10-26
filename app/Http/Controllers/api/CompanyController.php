@@ -14,24 +14,14 @@ class CompanyController extends Controller
      */
     public function index(Request $request)
     {
-        // $p_data = Company::query()
-        // ->whereHas('user', function($query){
-        //     return $query->isOwner();
-        // })
-        // ->with(['user'])
-        // ->when(isset($request->sortField) && !is_null($request->sortField), function($query) use($request){
-        //     $query->orderBy(strtolower($request->sortField), $request->sortOrder == 1 ? 'asc':'desc');
-        // })
-        // ->when( is_null($request->sortField), function($query) use($request){
-        //     $query->orderBy('id','desc');
-        // })
-        // ->paginate($request->rows);
+
 
         $p_data = Company::join('users', 'companies.user_id', '=', 'users.id')
+        ->join('user_plans', 'companies.user_plan_id', '=', 'user_plans.id')
         ->whereHas('user', function($query){
             return $query->isOwner();
         })
-        ->with(['user'])
+        ->with(['user','currentPlan'])
         ->when(isset($request->sortField) && !is_null($request->sortField), function($query) use($request){
             $query->orderBy(strtolower($request->sortField), $request->sortOrder == 1 ? 'asc':'desc');
         })
@@ -39,7 +29,7 @@ class CompanyController extends Controller
             $query->latest('companies.id');
         })
 
-        ->select('companies.*','users.*')
+        ->select('companies.*','users.*','user_plans.*')
         ->paginate($request->rows);
 
         $all_data = Company::query()
