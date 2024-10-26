@@ -32,15 +32,19 @@ class CompanyController extends Controller
         ->select('companies.*','users.*','user_plans.*','user_plans.status as user_plan_status','users.status as user_status','users.id as user_id')
         ->paginate($request->rows);
 
-        $all_data = Company::query()
-        ->select(['id','shop_name'])
-        ->whereHas('user', function($query){
-            return $query->isOwner();
-        })
-        ->latest()->get();
+        // $all_data = Company::join('users', 'companies.user_id', '=', 'users.id')
+        // ->join('user_plans', 'companies.user_plan_id', '=', 'user_plans.id')
+        // ->whereHas('user', function($query){
+        //     return $query->isOwner();
+        // })
+        // ->with(['user','currentPlan'])
+
+        // ->select('companies.*','users.*','user_plans.*','user_plans.status as user_plan_status','users.status as user_status','users.id as user_id')
+        // ->latest()->get();
+
         return response()->json([
             'p_data' => $p_data,
-            'all_data' => $all_data,
+            // 'all_data' => $all_data,
         ],200);
     }
 
