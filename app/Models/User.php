@@ -73,6 +73,10 @@ class User extends Authenticatable
     {
         return $builder->where('user_type', User::USER_TYPE_SELLER);
     }
+    public function scopeIsActive(Builder $builder)
+    {
+        return $builder->where('status', User::STATUS_ACTIVE);
+    }
     public function getLastLoginDtAttribute(){
 
         return !is_null($this->last_login_date) ? $this->last_login_date->diffForHumans(): "N/A";

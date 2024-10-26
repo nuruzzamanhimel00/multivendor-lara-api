@@ -29,7 +29,7 @@ class CompanyController extends Controller
             $query->latest('companies.id');
         })
 
-        ->select('companies.*','users.*','user_plans.*')
+        ->select('companies.*','users.*','user_plans.*','user_plans.status as user_plan_status','users.status as user_status','users.id as user_id')
         ->paginate($request->rows);
 
         $all_data = Company::query()
