@@ -15,10 +15,15 @@ class CompanyController extends Controller
      */
     public function index(Request $request)
     {
-
+        $filter_data = json_decode($request->filters);
+        // return json_decode($request->filters)[0];
+        // foreach($request->filters as $key => $filter){
+        //     return $filter;
+        // }
 
         $p_data = Company::join('users', 'companies.user_id', '=', 'users.id')
         ->join('user_plans', 'companies.user_plan_id', '=', 'user_plans.id')
+        ->join('plans', 'companies.plan_id', '=', 'plans.id')
         ->whereHas('user', function($query){
             return $query->isOwner();
         })
@@ -30,7 +35,19 @@ class CompanyController extends Controller
             $query->latest('companies.id');
         })
 
-        ->select('companies.*','users.*','user_plans.*','user_plans.status as user_plan_status','users.status as user_status','users.id as user_id','companies.id as company_id')
+
+        ->select('companies.*','users.*','user_plans.*','user_plans.status as user_plan_status','users.status as user_status','users.id as user_id','companies.id as company_id','plans.name as current_plan_name','users.name')
+
+        ->when(isset($request->search) && !is_null($request->search), function($query) use($request,$filter_data){
+            foreach($filter_data as $key => $filter){
+
+                if($key == 0){
+                    $query->where($filter, 'like', '%'.$request->search.'%');
+                }else{
+                    $query->orWhere($filter, 'like', '%'.$request->search.'%');
+                }
+            }
+        })
         ->paginate($request->rows);
 
         // $all_data = Company::join('users', 'companies.user_id', '=', 'users.id')
