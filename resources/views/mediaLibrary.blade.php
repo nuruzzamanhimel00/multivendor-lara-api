@@ -14,11 +14,12 @@
     </head>
     <body class="antialiased">
 
-        <form>
+        <form method="POST" action="{{route('mediaLibrary.store')}}" enctype="multipart/form-data">
+            @csrf
 
             <div class="form-group">
               <label for="exampleInputPassword1">Image</label>
-              <input type="file" class="form-control" id="exampleInputPassword1">
+              <input type="file" name="image[]" class="form-control" id="exampleInputPassword1">
             </div>
 
             <button type="submit" class="btn btn-primary">Submit</button>

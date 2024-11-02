@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Traits\ImageResizeTrait;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
-
+use Illuminate\Database\Eloquent\Model;
 /**
  * FileUploadService
  */
@@ -125,6 +125,44 @@ class FileUploadService
             }
         } catch (\Exception $ex) {
             return '';
+        }
+    }
+
+     /**
+     * @throws \Throwable
+     */
+    public function uploadToMediaLibrary(Model $model, array $files, string $collectionName = 'default', string $fileName = '', string $disk = 'public'): void
+    {
+
+        try {
+            // Filter and delete media that no longer exists in the $files array
+            $model->getMedia($collectionName)
+                ->filter(function ($media) use($files) {
+                    return !$files || !in_array($media->getUrl(), $files);
+                })
+                ->each->delete();
+
+
+
+            // Get only the new files that are not already in the media collection
+            $existingFiles = $model->getMedia($collectionName)
+                ->map(fn($media) => $media->getUrl())
+                ->toArray();
+
+            $newFiles = array_diff($files, $existingFiles);
+
+            foreach ($newFiles as $file) {
+                $media = $model->addMedia($file);
+                // $media = $model->addMediaFromDisk($file, $disk);
+
+                if ($fileName) {
+                    $media->usingFileName($fileName);
+                }
+
+                $media->toMediaCollection($collectionName);
+            }
+        } catch (\Throwable $throwable) {
+            throw $throwable;
         }
     }
 
