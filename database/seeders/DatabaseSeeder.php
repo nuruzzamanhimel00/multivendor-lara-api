@@ -65,8 +65,8 @@ class DatabaseSeeder extends Seeder
                     'cover_image' => 'cover_image.png',
                     'lat' => '',
                     'lng'=> '',
-                    'is_featured'=>2,
-                    'display_product'=>1,
+                    // 'is_featured'=>2,
+                    // 'display_product'=>1,
                     'views'=>0,
                     'payment_info'=>'',
                 ];

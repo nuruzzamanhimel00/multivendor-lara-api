@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Enums\CompanyDisplayEnum;
+use App\Enums\CompanyFeaturedEnum;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -26,8 +28,12 @@ return new class extends Migration
             $table->string('cover_image')->nullable();
             $table->string('lat')->nullable();
             $table->string('lng')->nullable();
-            $table->boolean('is_featured')->default(1)->comment('1=Yes, 2=No');
-            $table->boolean('display_product')->default(1)->comment('1=Yes, 2=No');
+            // $table->boolean('is_featured')->default(1)->comment('1=Yes, 2=No');
+            // $table->boolean('display_product')->default(1)->comment('1=Yes, 2=No');
+
+            $table->boolean('is_featured')->default(CompanyFeaturedEnum::No->value)->comment(enumCasesToSting(CompanyFeaturedEnum::cases()));
+            $table->boolean('display_product')->default(CompanyDisplayEnum::Yes->value)->comment(enumCasesToSting(CompanyDisplayEnum::cases()));
+
             $table->integer('views')->default(0);
             $table->text('payment_info')->nullable();
 

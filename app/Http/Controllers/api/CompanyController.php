@@ -50,20 +50,17 @@ class CompanyController extends Controller
         })
         ->paginate($request->rows);
 
-        // $all_data = Company::join('users', 'companies.user_id', '=', 'users.id')
-        // ->join('user_plans', 'companies.user_plan_id', '=', 'user_plans.id')
-        // ->whereHas('user', function($query){
-        //     return $query->isOwner();
-        // })
-        // ->with(['user','currentPlan'])
 
-        // ->select('companies.*','users.*','user_plans.*','user_plans.status as user_plan_status','users.status as user_status','users.id as user_id')
-        // ->latest()->get();
 
         return response()->json([
             'p_data' => $p_data,
             // 'all_data' => $all_data,
         ],200);
+    }
+    public function getCompany($id){
+
+        $company = Company::with(['user'])->find($id);
+        return response()->json($company);
     }
 
     /**
@@ -142,5 +139,10 @@ class CompanyController extends Controller
             $this->destroy($company_id);
         }
         return response()->json(true);
+    }
+
+    public function logoUpdate(Request $request){
+        // return "dd";
+        return $request->all();
     }
 }

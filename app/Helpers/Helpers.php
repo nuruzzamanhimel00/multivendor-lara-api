@@ -136,3 +136,33 @@ function generateSlug($value)
         return '';
     }
 }
+
+
+if (!function_exists('enumCaseToArray')) {
+    function enumCaseToArray($data)
+    {
+        $cases = [];
+        foreach ($data as $case) {
+            $cases[strtolower($case->name)] = $case->value;
+        }
+        return $cases;
+    }
+}
+if (!function_exists('enumCasesToSting')) {
+    function enumCasesToSting($data)
+    {
+        $casesString = '';
+        $cases = enumCaseToArray($data);
+        if(count($cases) > 0){
+            // Convert the array into the desired string format
+            $casesString = implode(', ', array_map(
+                fn($key, $value) => "$key = $value",
+                array_keys($cases),
+                $cases
+            ));
+        }
+        return $casesString;
+    }
+}
+
+

@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use App\Enums\CompanyFeaturedEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Builder;
 
 class Company extends Model
 {
     use HasFactory,SoftDeletes;
-
+    protected $table = 'companies';
     protected $fillable = [
         'user_id',
         'subdomain',
@@ -29,6 +30,10 @@ class Company extends Model
         'payment_info',
         'plan_id',
         'user_plan_id'
+    ];
+    protected $casts = [
+        'is_featured' => CompanyFeaturedEnum::class,
+        // 'display_product' => 'boolean',
     ];
     protected $appends = ['company_logo_url','company_image_url','company_cover_image_url','created_date'];
     public const FILE_LOGO_PATH = 'company/logo';

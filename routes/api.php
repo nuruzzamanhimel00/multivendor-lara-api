@@ -30,7 +30,18 @@ Route::post('/admin/register',[AuthController::class,'register']);
 Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::apiResource('companies', CompanyController::class);
-    Route::post('selected-company-delete', [CompanyController::class,'selectedCompanyDelete']);
+
+    Route::get('/company/{id}', [CompanyController::class, 'getCompany']);
+
+
     Route::apiResource('users', UserController::class);
     Route::post('user-status-update', [UserController::class,'statusUpdate']);
+    //ajax
+
   });
+//temp file upload
+//********** Ajax Request */
+Route::prefix('companies')->group(function () {
+    Route::post('ajax/logo-update', [CompanyController::class,'logoUpdate']);
+});
+

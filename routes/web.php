@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\login;
+
 use App\Models\UserPeople;
+use App\Enums\CompanyFeaturedEnum;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Query\JoinClause;
 
@@ -17,6 +19,23 @@ use Illuminate\Database\Query\JoinClause;
 */
 
 Route::get('/', function () {
+    // $enum_data = CompanyFeaturedEnum::;
+    // $cases = CompanyFeaturedEnum::cases();
+    // dd(enumCasesToSting($cases));
+    // $cases = [];
+    // foreach (CompanyFeaturedEnum::cases() as $case) {
+    //     $cases[strtolower($case->name)] = $case->value;
+    // }
+
+    // if(count($cases) > 0){
+    //     // Convert the array into the desired string format
+    //     $casesString = implode(', ', array_map(
+    //         fn($key, $value) => "$key = $value",
+    //         array_keys($cases),
+    //         $cases
+    //     ));
+    // }
+
     return view('welcome');
 });
 Route::get('/last-three-recoreds', function () {
