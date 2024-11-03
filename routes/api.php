@@ -27,11 +27,14 @@ Route::post('/register',[UserAuthController::class,'register']);
 //admin auth
 Route::post('/admin/login',[AuthController::class,'login']);
 Route::post('/admin/register',[AuthController::class,'register']);
+Route::post('/company/{id}', [CompanyController::class, 'companyUpdate']);
+
 Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::apiResource('companies', CompanyController::class);
 
     Route::get('/company/{id}', [CompanyController::class, 'getCompany']);
+    // Route::post('/company/{id}', [CompanyController::class, 'companyUpdate']);
+    Route::apiResource('companies', CompanyController::class);
 
 
     Route::apiResource('users', UserController::class);

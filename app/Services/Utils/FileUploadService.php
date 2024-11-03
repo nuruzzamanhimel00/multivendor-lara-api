@@ -150,20 +150,27 @@ class FileUploadService
                 ->toArray();
 
             $newFiles = array_diff($files, $existingFiles);
-
-            foreach ($newFiles as $file) {
-                $media = $model->addMedia($file);
-                // $media = $model->addMediaFromDisk($file, $disk);
-
-                if ($fileName) {
-                    $media->usingFileName($fileName);
+            if(count($newFiles) > 0){
+                foreach ($newFiles as $file) {
+                    // Check if the entry is an instance of UploadedFile (file)
+                    if (is_file($file)) {
+                        // It's a file uploaded via the form
+                        $media = $model->addMedia($file);
+                        $media->toMediaCollection($collectionName);
+                    } elseif (filter_var($file, FILTER_VALIDATE_URL)) {
+                        // It's a valid URL
+                        $media = $model->addMediaFromUrl($file);
+                        $media->toMediaCollection($collectionName);
+                    }
                 }
-
-                $media->toMediaCollection($collectionName);
             }
+
         } catch (\Throwable $throwable) {
             throw $throwable;
         }
     }
+
+
+
 
 }
