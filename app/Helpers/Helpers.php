@@ -1,6 +1,7 @@
 <?php
 
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -109,6 +110,27 @@ function getStorageImage($path, $name, $is_user = false)
 
     return $is_user ? getUserDefaultImage() : getDefaultImage();
 }
+if (!function_exists('getFirstMediaUrlHelper')) {
+
+    function getFirstMediaUrlHelper(Model $model, string $collectionName = 'default', string $conversionName = null, string $type = 'default'): string
+    {
+        if(!is_null($conversionName)){
+            $url = $model->getFirstMediaUrl($collectionName, $conversionName);
+        }else{
+            $url = $model->getFirstMediaUrl($collectionName);
+        }
+        if ($url) {
+            return $url;
+        }
+        return match ($type) {
+            'logo' => getUserDefaultImage(),
+            // 'favicon' => getDefaultFavicon(),
+            // 'wide_logo' => getDefaultWideLogo(),
+            default => getDefaultImage(),
+        };
+    }
+}
+
 
 if (!function_exists('makeAlias')) {
     function makeAlias($name)

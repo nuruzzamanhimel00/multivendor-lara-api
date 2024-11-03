@@ -47,6 +47,10 @@ class Company extends Model implements HasMedia
     public const FILE_IMAGE_PATH = 'company/image';
     public const FILE_COVER_IMAGE_PATH = 'company/cover_image';
 
+     const COMPANY_COVER_IMAGE = 'company_cover_image';
+     const COMPANY_LOGO = 'company_logo';
+     const COMPANY_IMAGE = 'company_image';
+
     public function user()
     {
         return $this->belongsTo(User::class,'user_id','id');
@@ -56,19 +60,22 @@ class Company extends Model implements HasMedia
     public function getCompanyLogoUrlAttribute()
     {
         return [
-            getStorageImage(self::FILE_LOGO_PATH, $this->shop_logo, false)
+            // getStorageImage(self::FILE_LOGO_PATH, $this->shop_logo, false)
+            getFirstMediaUrlHelper($this,self::COMPANY_LOGO)
         ];
     }
     public function getCompanyImageUrlAttribute()
     {
         return [
-            getStorageImage(self::FILE_IMAGE_PATH, $this->shop_image, false)
+            // getStorageImage(self::FILE_IMAGE_PATH, $this->shop_image, false)
+            getFirstMediaUrlHelper($this,self::COMPANY_IMAGE)
         ];
     }
     public function getCompanyCoverImageUrlAttribute()
     {
         return [
-            getStorageImage(self::FILE_COVER_IMAGE_PATH, $this->cover_image, false)
+            // getStorageImage(self::FILE_COVER_IMAGE_PATH, $this->cover_image, false)
+            getFirstMediaUrlHelper($this,self::COMPANY_COVER_IMAGE)
         ];
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Models\User;
 use App\Models\Company;
+
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
@@ -164,14 +165,14 @@ class CompanyController extends Controller
 
 
         if(isset($request->company_cover_image_url) && count($request->company_cover_image_url) > 0){
-            $this->fileUploadService->uploadToMediaLibrary($company, $request->company_cover_image_url,'company_cover_image');
+            $this->fileUploadService->uploadToMediaLibrary($company, $request->company_cover_image_url,Company::COMPANY_COVER_IMAGE);
         }
         if(isset($request->company_image_url) && count($request->company_image_url) > 0){
-            $this->fileUploadService->uploadToMediaLibrary($company, $request->company_image_url,'company_image');
+            $this->fileUploadService->uploadToMediaLibrary($company, $request->company_image_url,Company::COMPANY_IMAGE);
         }
 
         if(isset($request->company_logo_url) && count($request->company_logo_url) > 0){
-             $this->fileUploadService->uploadToMediaLibrary($company, $request->company_logo_url,'company_logo');
+             $this->fileUploadService->uploadToMediaLibrary($company, $request->company_logo_url,Company::COMPANY_LOGO);
 
         }
 
