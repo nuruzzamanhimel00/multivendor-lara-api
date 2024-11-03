@@ -156,12 +156,16 @@ class FileUploadService
                     if (is_file($file)) {
                         // It's a file uploaded via the form
                         $media = $model->addMedia($file);
-                        $media->toMediaCollection($collectionName);
+
                     } elseif (filter_var($file, FILTER_VALIDATE_URL)) {
                         // It's a valid URL
                         $media = $model->addMediaFromUrl($file);
-                        $media->toMediaCollection($collectionName);
+
                     }
+                    if ($fileName) {
+                        $media->usingFileName($fileName);
+                    }
+                    $media->toMediaCollection($collectionName);
                 }
             }
 
