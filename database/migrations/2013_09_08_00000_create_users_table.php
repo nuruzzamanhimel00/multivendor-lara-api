@@ -23,6 +23,7 @@ return new class extends Migration
             $table->datetime('last_login_date')->nullable();
             $table->string('phone')->nullable()->unique();
             $table->string('status')->default(User::STATUS_ACTIVE);
+            $table->integer('login_user_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

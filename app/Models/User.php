@@ -42,6 +42,7 @@ class User extends Authenticatable
         'last_login_date',
         'phone',
         'status',
+        'login_user_id'
 
     ];
 
@@ -62,6 +63,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
 
     protected $appends = ['avatar_url','last_login_dt'];
 
@@ -87,4 +90,13 @@ class User extends Authenticatable
         return $this->hasOne(Company::class,'user_id','id');
     }
 
+    public function loginUser()
+    {
+        return $this->belongsTo(User::class,'login_user_id','id');
+    }
+
+    public function isAdmin(){
+
+        return $this->user_type == self::USER_TYPE_ADMIN;
+    }
 }

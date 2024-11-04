@@ -19,7 +19,7 @@ use App\Http\Controllers\api\user\auth\UserAuthController;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    return $request->user()->load(['loginUser']);
 });
 //user auth
 Route::post('/login',[UserAuthController::class,'login']);
@@ -27,13 +27,20 @@ Route::post('/register',[UserAuthController::class,'register']);
 //admin auth
 Route::post('/admin/login',[AuthController::class,'login']);
 Route::post('/admin/register',[AuthController::class,'register']);
-Route::post('/company/{id}', [CompanyController::class, 'companyUpdate']);
+// Route::post('/company/{id}', [CompanyController::class, 'companyUpdate']);
 
 Route::group(['middleware' => 'auth:sanctum'], function() {
+    //login as
+    Route::middleware(['verifiedAdmin'])->group(function () {
+        Route::post('/impersonate/{ownerId}', [AuthController::class, 'impersonateOwner']);
+        Route::post('/stop-impersonation/', [AuthController::class, 'stopImpersonation']);
+    });
+
+
     Route::post('logout', [AuthController::class, 'logout']);
 
     Route::get('/company/{id}', [CompanyController::class, 'getCompany']);
-    // Route::post('/company/{id}', [CompanyController::class, 'companyUpdate']);
+    Route::post('/company/{id}', [CompanyController::class, 'companyUpdate']);
     Route::apiResource('companies', CompanyController::class);
 
 

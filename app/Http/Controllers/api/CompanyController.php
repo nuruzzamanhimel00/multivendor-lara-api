@@ -131,21 +131,7 @@ class CompanyController extends Controller
     //** COmpany Update */
     public function companyUpdate(Request $request, $id){
 
-        // if ($request->has('company_logo_url')) {
-        //     // Loop through each file in the array
-        //     foreach ($request->file('company_image_url') as $file) {
-        //         // Check if the current file exists
-        //         if ($file->isValid()) {
-        //             // Process the file (e.g., store it)
-        //             $filePath = $file->store('uploads', 'public');
 
-        //             // You can do further processing with $filePath if needed
-        //         } else {
-        //             return response()->json(['message' => 'One or more files are not valid'], 400);
-        //         }
-        //     }
-        // }
-        // return 'ok';
         $companyRequestData = $request->only([
             'shop_name',
             'shop_description',

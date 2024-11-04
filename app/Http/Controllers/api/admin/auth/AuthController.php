@@ -6,9 +6,12 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\UserPlan;
 use Illuminate\Http\Request;
+use App\Enums\CompanyDisplayEnum;
+use App\Enums\CompanyFeaturedEnum;
 use App\Services\User\UserService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Services\Plan\UserPlanService;
 use App\Jobs\AdminNotifyRegisCreateJob;
@@ -69,8 +72,8 @@ class AuthController extends Controller
                 'cover_image' => null,
                 'lat' => '',
                 'lng'=> '',
-                'is_featured'=>2,
-                'display_product'=>1,
+                'is_featured'=>CompanyFeaturedEnum::No->value,
+                'display_product'=>CompanyDisplayEnum::Yes->value,
                 'views'=>0,
                 'payment_info'=>'',
             ];
@@ -188,11 +191,39 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        auth()->user()->update([
+            'login_user_id' => null
+        ]);
         $request->user()->tokens()->delete();
 
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
 
+    }
+
+    public function impersonateOwner($ownerId)
+    {
+        // Ensure the admin is authenticated
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Unauthorized action.');
+        }
+        auth()->user()->update([
+            'login_user_id' => $ownerId
+        ]);
+
+        return response()->json(['message' => 'Successfully impersonated the owner']);
+    }
+    public function stopImpersonation()
+    {
+        // Ensure the admin is authenticated
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Unauthorized action.');
+        }
+        auth()->user()->update([
+            'login_user_id' => null
+        ]);
+
+        return response()->json(['message' => 'Successfully stopped impersonated the owner']);
     }
 }
