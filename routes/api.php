@@ -3,9 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\CompanyController;
-use App\Http\Controllers\api\admin\auth\AuthController;
 use App\Http\Controllers\api\admin\UserController;
+use App\Http\Controllers\api\admin\auth\AuthController;
 use App\Http\Controllers\api\user\auth\UserAuthController;
+use App\Http\Controllers\api\admin\settings\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,13 +37,13 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
         Route::post('/stop-impersonation/', [AuthController::class, 'stopImpersonation']);
     });
 
-
     Route::post('logout', [AuthController::class, 'logout']);
 
     Route::get('/company/{id}', [CompanyController::class, 'getCompany']);
     Route::post('/company/{id}', [CompanyController::class, 'companyUpdate']);
     Route::apiResource('companies', CompanyController::class);
-
+    //SETTINGS
+    Route::post('/system-settings/store', [SettingController::class, 'store']);
 
     Route::apiResource('users', UserController::class);
     Route::post('user-status-update', [UserController::class,'statusUpdate']);

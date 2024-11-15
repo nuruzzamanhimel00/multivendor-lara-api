@@ -2,9 +2,11 @@
 
 use App\Models\login;
 
+use App\Models\Setting;
 use App\Models\TestModel;
 use App\Models\UserPeople;
 use Illuminate\Http\Request;
+use Rawilk\Settings\Settings;
 use App\Enums\CompanyFeaturedEnum;
 use Illuminate\Support\Facades\Route;
 use App\Services\Utils\FileUploadService;
@@ -26,6 +28,23 @@ use Illuminate\Database\Query\JoinClause;
  */
 
 Route::get('/', function () {
+    //site settings
+    $settingData = [
+        "site_name"=> "sds",
+        "site_address"=> "asda",
+        "site_phone"=> "21312",
+        "site_email"=> "sad@sfd.com",
+        "site_description"=> "dfd",
+        "facebook_url"=> "dfd",
+        "instagram_url"=> "dfd",
+        "twitter_url"=> "dfd",
+    ];
+    // Create a new setting
+        Settings::set('foo', 'bar');
+
+        // Update an existing setting
+        Settings::set('foo', 'updated value');
+    dd('dd');
     // $enum_data = CompanyFeaturedEnum::;
     // $cases = CompanyFeaturedEnum::cases();
     // dd(enumCasesToSting($cases));
@@ -43,7 +62,7 @@ Route::get('/', function () {
     //     ));
     // }
 
-    return view('welcome');
+    // return view('welcome');
 });
 Route::get('/mediaLibrary', function () {
 
