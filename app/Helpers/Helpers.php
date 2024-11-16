@@ -3,6 +3,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Robiussani152\Settings\Facades\Settings;
 
 
  function replace_spec_char($subject)
@@ -186,5 +187,45 @@ if (!function_exists('enumCasesToSting')) {
         return $casesString;
     }
 }
+//site setting
+if (!function_exists('setSettingsKeyValue')) {
+    function setSettingsKeyValue($settings)
+    {
+        foreach($settings as $key => $value){
+            Settings::set($key, $value);
+        }
+    }
+}
+if (!function_exists('getSettingValue')) {
+    function getSettingValue($key)
+    {
+        return Settings::get($key);
+    }
+}
 
+if (!function_exists('getAllSettingValue')) {
+    function getAllSettingValue()
+    {
+        return $settings = Settings::all();
+    }
+}
+if (!function_exists('forgetSettingValue')) {
+    function forgetSettingValue($key)
+    {
+        Settings::forget($key);
+    }
+}
+if (!function_exists('handleFileUpload')) {
+    function handleFileUpload($file, $directory, $key)
+    {
+        $oldFilePath = getSettingValue($key);
 
+        // Delete the old file if it exists
+        if ($oldFilePath && Storage::disk('public')->exists($oldFilePath)) {
+            Storage::disk('public')->delete($oldFilePath);
+        }
+
+        // Store the new file and return its path
+        return $file->store($directory, 'public');
+    }
+}

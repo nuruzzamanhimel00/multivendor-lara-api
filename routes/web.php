@@ -2,15 +2,16 @@
 
 use App\Models\login;
 
-use App\Models\Setting;
+
 use App\Models\TestModel;
 use App\Models\UserPeople;
 use Illuminate\Http\Request;
-use Rawilk\Settings\Settings;
+
 use App\Enums\CompanyFeaturedEnum;
 use Illuminate\Support\Facades\Route;
 use App\Services\Utils\FileUploadService;
 use Illuminate\Database\Query\JoinClause;
+use Robiussani152\Settings\Facades\Settings;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,13 +39,24 @@ Route::get('/', function () {
         "facebook_url"=> "dfd",
         "instagram_url"=> "dfd",
         "twitter_url"=> "dfd",
+        // site_logo: "",
+        // shop_default_image: "",
+        // blog_cover_image: "",
+        // shop_cover_image: "",
+        // banner_image: "",
     ];
-    // Create a new setting
-        Settings::set('foo', 'bar');
 
-        // Update an existing setting
-        Settings::set('foo', 'updated value');
-    dd('dd');
+    // $systemSettings = getAllSettingValue()->toArray();
+
+    // $systemSettings['site_logo_url'] = url('/images/logo.png');
+    // $systemSettings['shop_default_image_url'] = url('/images/logo.png');
+    // dd($systemSettings);
+    // foreach($settingData as $key => $value){
+    //     Settings::set($key, $value);
+    // }
+    // // Create a new setting
+    // $settings = Settings::all();
+    // dd('dd',$settings);
     // $enum_data = CompanyFeaturedEnum::;
     // $cases = CompanyFeaturedEnum::cases();
     // dd(enumCasesToSting($cases));

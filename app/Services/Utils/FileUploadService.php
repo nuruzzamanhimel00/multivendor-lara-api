@@ -175,6 +175,25 @@ class FileUploadService
     }
 
 
+    /**
+     * Handle file upload, including deletion of the old file if it exists.
+     *
+     * @param \Illuminate\Http\UploadedFile $file
+     * @param string $directory
+     * @param string $key
+     * @return string|null
+     */
+    public function handleFileUpload($file, $directory, $key)
+    {
+        $oldFilePath = getSettingValue($key);
 
+        // Delete the old file if it exists
+        if ($oldFilePath && Storage::disk('public')->exists($oldFilePath)) {
+            Storage::disk('public')->delete($oldFilePath);
+        }
+
+        // Store the new file and return its path
+        return $file->store($directory, 'public');
+    }
 
 }

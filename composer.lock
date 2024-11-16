@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad3aa42bc808b39cb880179331c323e1",
+    "content-hash": "0e999b79de84cacdef5166fb55cb9c46",
     "packages": [
         {
             "name": "brick/math",
@@ -3416,6 +3416,53 @@
                 }
             ],
             "time": "2024-04-27T21:32:50+00:00"
+        },
+        {
+            "name": "robiussani152/settings",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Robiussani152/settings.git",
+                "reference": "8e20a05f49deb562242a563467cbe14fa0c03805"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Robiussani152/settings/zipball/8e20a05f49deb562242a563467cbe14fa0c03805",
+                "reference": "8e20a05f49deb562242a563467cbe14fa0c03805",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Robiussani152\\Settings\\SettingServiceProvider"
+                    ],
+                    "aliases": {
+                        "Settings": "Robiussani152\\Settings\\Facades\\Settings"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Robiussani152\\Settings\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Robius Sani",
+                    "email": "rsani152@gmail.com"
+                }
+            ],
+            "description": "This package is for managing most basic settings in your laravel application like site title, site logo etc. You can add your custom settings using this package.",
+            "support": {
+                "issues": "https://github.com/Robiussani152/settings/issues",
+                "source": "https://github.com/Robiussani152/settings/tree/v1.0.2"
+            },
+            "time": "2019-10-19T17:51:05+00:00"
         },
         {
             "name": "spatie/image",
