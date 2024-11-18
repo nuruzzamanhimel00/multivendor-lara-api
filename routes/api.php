@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('/company/{id}', [CompanyController::class, 'companyUpdate']);
     Route::apiResource('companies', CompanyController::class);
     //SETTINGS
-    Route::get('/system-settings/get-all', [SettingController::class, 'getAllSystemSetting']);
+    Route::get('/system-settings/get', [SettingController::class, 'getAllSystemSetting']);
     Route::post('/system-settings/set', [SettingController::class, 'setSystemSetting']);
 
     Route::apiResource('users', UserController::class);
