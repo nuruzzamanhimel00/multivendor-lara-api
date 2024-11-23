@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\CompanyController;
 use App\Http\Controllers\api\admin\UserController;
 use App\Http\Controllers\api\admin\auth\AuthController;
+use App\Http\Controllers\api\admin\plan\PlanController;
 use App\Http\Controllers\api\user\auth\UserAuthController;
 use App\Http\Controllers\api\admin\settings\SettingController;
 
@@ -48,7 +49,11 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 
     Route::apiResource('users', UserController::class);
     Route::post('user-status-update', [UserController::class,'statusUpdate']);
-    //ajax
+    //PLAN
+    Route::apiResource('plans', PlanController::class);
+    Route::post('plan-enable-ordering', [PlanController::class,'planEnableOrdering']);
+    Route::post('plan-period-change', [PlanController::class,'planPeriodChange']);
+
 
   });
 //temp file upload

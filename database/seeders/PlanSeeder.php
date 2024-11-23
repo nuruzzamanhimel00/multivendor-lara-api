@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Plan;
 use App\Models\login;
+use App\Enums\PlanPeriodEnum;
 use Illuminate\Database\Seeder;
 use Database\Factories\LoginFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -22,9 +23,9 @@ class PlanSeeder extends Seeder
                 'limit_items' => 10,
                 'limit_orders' => 10,
                 'price'=>0,
-                'period'=>1,
-                'plan_description'=>'Use it for free and upgrade as you grow',
-                'plan_features'=>'Use it for free and upgrade as you grow',
+                'period'=>PlanPeriodEnum::MONTHLY->value,
+                'description'=>'Use it for free and upgrade as you grow',
+                'features'=>'Use it for free and upgrade as you grow',
                 'enable_orders'=> 2,
             ],
             [
@@ -33,9 +34,9 @@ class PlanSeeder extends Seeder
                 'limit_items' => 50,
                 'limit_orders' => 50,
                 'price'=>100,
-                'period'=>2,
-                'plan_description'=>'Use it for free and upgrade as you grow',
-                'plan_features'=>'Use it for free and upgrade as you grow',
+                'period'=>PlanPeriodEnum::ANNUALLY->value,
+                'description'=>'Use it for free and upgrade as you grow',
+                'features'=>'Use it for free and upgrade as you grow',
                 'enable_orders'=> 2,
             ]
         ];
