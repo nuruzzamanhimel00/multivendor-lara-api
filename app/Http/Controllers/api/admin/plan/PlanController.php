@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Enums\PlanPeriodEnum;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\Rule;
 
 class PlanController extends Controller
 {
@@ -98,13 +99,7 @@ class PlanController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+
 
     public function planEnableOrdering(Request $request){
         $validated = $request->validate([
@@ -132,5 +127,41 @@ class PlanController extends Controller
             'status'=> true,
             'data' => $plan
         ]);
+    }
+
+
+    public function destroy(string $id)
+    {
+        $data = Plan::find($id);
+
+        $data->delete();
+        if(request()->ajax()){
+
+            return response()->json(true);
+        }
+    }
+
+    public function selectedPlanDelete(Request $request){
+        $validatedData = $request->validate([
+            'plan_ids' => [
+                'required',
+                'array',
+                function($attribute, $value, $fail) {
+                    if (!is_array($value)) {
+                        return $fail('The '.$attribute.' must be an array.');
+                    }
+                }
+            ],
+            'plan_ids.*' => [
+                'required',
+                'integer',
+                Rule::exists('plans', 'id')
+            ],
+        ]);
+
+        foreach($request->plan_ids as $id){
+            $this->destroy($id);
+        }
+        return response()->json(true);
     }
 }

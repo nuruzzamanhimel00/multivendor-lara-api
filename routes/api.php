@@ -42,6 +42,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 
     Route::get('/company/{id}', [CompanyController::class, 'getCompany']);
     Route::post('/company/{id}', [CompanyController::class, 'companyUpdate']);
+    Route::post('/selected-company-delete', [CompanyController::class, 'selectedCompanyDelete']);
     Route::apiResource('companies', CompanyController::class);
     //SETTINGS
     Route::get('/system-settings/get', [SettingController::class, 'getAllSystemSetting']);
@@ -53,7 +54,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::apiResource('plans', PlanController::class);
     Route::post('plan-enable-ordering', [PlanController::class,'planEnableOrdering']);
     Route::post('plan-period-change', [PlanController::class,'planPeriodChange']);
-
+    Route::post('/selected-plan-delete', [PlanController::class, 'selectedPlanDelete']);
 
   });
 //temp file upload
