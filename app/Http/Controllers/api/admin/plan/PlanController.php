@@ -64,10 +64,13 @@ class PlanController extends Controller
             'description' => 'required',
             'features' => 'required',
             'price' => 'required',
-            'item_limit' => 'required',
-            'order_limit' => 'required',
+            'limit_items' => 'required',
+            'limit_orders' => 'required',
             'period' =>['required', new Enum(PlanPeriodEnum::class)],
+            'enable_orders' => 'required'
         ]);
+        $validated['enable_orders'] = $request->enable_orders == 'enabled' ? 1 : 0;
+
         $plan = Plan::create($validated);
         return response()->json([
             'status'=> true,
@@ -135,10 +138,7 @@ class PlanController extends Controller
         $data = Plan::find($id);
 
         $data->delete();
-        if(request()->ajax()){
-
-            return response()->json(true);
-        }
+        return response()->json(true);
     }
 
     public function selectedPlanDelete(Request $request){
