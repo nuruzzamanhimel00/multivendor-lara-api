@@ -83,7 +83,8 @@ class PlanController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $plan = Plan::find($id);
+        return response()->json($plan);
     }
 
     /**
@@ -99,7 +100,57 @@ class PlanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                Rule::unique('plans', 'name')->ignore($id),
+                'max:255',
+            ],
+            'description' => 'required',
+            'features' => 'required',
+            'price' => 'required|numeric',
+            'limit_items' => 'required|integer',
+            'limit_orders' => 'required|integer',
+            'period' => ['required', new Enum(PlanPeriodEnum::class)],
+            'enable_orders' => 'required',
+        ]);
+        return $request->all();
+        $validated['enable_orders'] = $request->enable_orders == 'enabled' ? 1 : 0;
+
+        $plan = Plan::create($validated);
+        return response()->json([
+            'status'=> true,
+            'data' => $plan
+        ]);
+    }
+    public function planUpdate(Request $request, string $id)
+    {
+
+
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                Rule::unique('plans', 'name')->ignore($id),
+                'max:255',
+            ],
+            'description' => 'required',
+            'features' => 'required',
+            'price' => 'required|numeric',
+            'limit_items' => 'required|integer',
+            'limit_orders' => 'required|integer',
+            'period' => ['required', new Enum(PlanPeriodEnum::class)],
+            'enable_orders' => 'required',
+        ]);
+
+        $validated['enable_orders'] = $request->enable_orders == 'enabled' ? 1 : 0;
+
+        $plan = Plan::find($id)->update($validated);
+        return response()->json([
+            'status'=> true,
+            'data' => $plan
+        ]);
     }
 
 

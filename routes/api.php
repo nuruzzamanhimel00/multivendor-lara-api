@@ -52,6 +52,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::post('user-status-update', [UserController::class,'statusUpdate']);
     //PLAN
     Route::apiResource('plans', PlanController::class);
+    Route::post('plans/update/{id}', [PlanController::class,'planUpdate']);
     Route::post('plan-enable-ordering', [PlanController::class,'planEnableOrdering']);
     Route::post('plan-period-change', [PlanController::class,'planPeriodChange']);
     Route::post('/selected-plan-delete', [PlanController::class, 'selectedPlanDelete']);
