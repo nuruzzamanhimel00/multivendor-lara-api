@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\api\CompanyController;
 use App\Http\Controllers\api\admin\UserController;
 use App\Http\Controllers\api\admin\auth\AuthController;
@@ -63,4 +64,10 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 Route::prefix('companies')->group(function () {
     Route::post('ajax/logo-update', [CompanyController::class,'logoUpdate']);
 });
+
+
+Route::post('/payment/initiate', [PaymentController::class, 'initiatePayment']);
+Route::post('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+Route::post('/payment/fail', [PaymentController::class, 'paymentFail'])->name('payment.fail');
+Route::post('/payment/cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
 
